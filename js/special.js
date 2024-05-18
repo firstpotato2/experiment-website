@@ -3,7 +3,5 @@ document.getElementById('pauseButton').addEventListener('click', function() {
 });
 
 document.getElementById('nextImageButton').addEventListener('click', function() {
-    window.location.href = 'index.html#test-page';
+    window.location.href = 'test.html';
 });
- 
-
