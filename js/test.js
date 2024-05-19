@@ -9,31 +9,26 @@ document.getElementById('pauseButton').addEventListener('click', function() {
 let currentImageIndex = parseInt(new URLSearchParams(window.location.search).get('index')) || parseInt(sessionStorage.getItem('currentImageIndex')) || 0;
 let displayedImages = JSON.parse(sessionStorage.getItem('displayedImages')) || [];
 let answeredQuestions = JSON.parse(sessionStorage.getItem('answeredQuestions')) || [];
+let answers = JSON.parse(sessionStorage.getItem('answers')) || [];
 
 const imagesA = [
-    'https://drive.google.com/file/d/1FumQFEe5i3wG0byoR1EsW-9ZGVpblM0Z/view?usp=drive_link',
-    'https://drive.google.com/file/d/1FglXXLJtgVHWxu9g_A8iX9FChE9Htglr/view?usp=drive_link',
-    // 确保共有40个URL（A组普通图片）
+    'https://drive.google.com/uc?export=view&id=1cGrUqRK0P6IgpOJcwP6IRikCbaoDMDIl',
+    'https://drive.google.com/uc?export=view&id=1FumQFEe5i3wG0byoR1EsW-9ZGVpblM0Z'
 ];
 
-
 const imagesB = [
-    'https://drive.google.com/file/d/1EBpl_j3jEDq7wQdIn7xEjO_P0KO-zxkw/view?usp=drive_link',
-    'https://drive.google.com/file/d/1cGrUqRK0P6IgpOJcwP6IRikCbaoDMDIl/view?usp=drive_link',
-    
-    // 确保共有40个URL（B组普通图片）
+    'https://drive.google.com/uc?export=view&id=1FglXXLJtgVHWxu9g_A8iX9FChE9Htglr',
+    'https://drive.google.com/uc?export=view&id=1id74twme_AfdwmYEInKVwYWgf6jcwf9V'
 ];
 
 const specialImagesA = [
-    'https://drive.google.com/file/d/1id74twme_AfdwmYEInKVwYWgf6jcwf9V/view?usp=drive_link',
-    'https://drive.google.com/file/d/1OHSPGQevKVVMdLUoRNIVmQGQ3S2u2WvT/view?usp=drive_link',
-    // 确保共有10个URL（A组特殊图片）
+    'https://drive.google.com/uc?export=view&id=1oUunjw82c71X9b8OLKunzNat3Q_iWoFE',
+    'https://drive.google.com/uc?export=view&id=149_6wZrxp5DodRzG3bIAlG0ACvLETnM8'
 ];
 
 const specialImagesB = [
-    'https://drive.google.com/file/d/1oUunjw82c71X9b8OLKunzNat3Q_iWoFE/view?usp=drive_link',
-    'https://drive.google.com/file/d/149_6wZrxp5DodRzG3bIAlG0ACvLETnM8/view?usp=drive_link',
-    // 确保共有10个URL（B组特殊图片）
+    'https://drive.google.com/uc?export=view&id=1OHSPGQevKVVMdLUoRNIVmQGQ3S2u2WvT',
+    'https://drive.google.com/uc?export=view&id=1EBpl_j3jEDq7wQdIn7xEjO_P0KO-zxkw'
 ];
 
 const images = imagesA.concat(imagesB);
@@ -43,7 +38,6 @@ const combinedImages = images.concat(specialImages);
 shuffleArray(combinedImages);
 
 const times = [];
-const answers = [];
 
 window.addEventListener('popstate', function(event) {
     history.pushState(null, null, location.href); // 阻止历史记录中的后退操作

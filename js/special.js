@@ -9,16 +9,6 @@ const questions = [
         options: ['選項A', '選項B', '選項C', '選項D'],
         correct: '選項B'
     },
-    {
-        question: '這是第三個特殊圖片的題目？',
-        options: ['選項A', '選項B', '選項C', '選項D'],
-        correct: '選項B'
-    },
-    {
-        question: '這是第四個特殊圖片的題目？',
-        options: ['選項A', '選項B', '選項C', '選項D'],
-        correct: '選項B'
-    },
     // 继续添加所有特殊图片的题目
 ];
 
@@ -38,9 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         questionContainer.appendChild(questionElement);
         
         questionData.options.forEach((option, index) => {
-            const optionElement = document.createElement('button');
-            optionElement.textContent = option;
-            optionElement.addEventListener('click', () => {
+            const optionElement = document.createElement('input');
+            optionElement.type = 'radio';
+            optionElement.name = 'option';
+            optionElement.value = option;
+            optionElement.id = `option${index}`;
+            optionElement.addEventListener('change', () => {
                 answers[specialIndex] = {
                     answer: option,
                     correct: option === questionData.correct
@@ -50,7 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions)); // 保存已回答题目索引到会话存储
                 sessionStorage.setItem('answers', JSON.stringify(answers)); // 保存答案到会话存储
             });
+            
+            const labelElement = document.createElement('label');
+            labelElement.htmlFor = `option${index}`;
+            labelElement.textContent = option;
+            
             questionContainer.appendChild(optionElement);
+            questionContainer.appendChild(labelElement);
+            questionContainer.appendChild(document.createElement('br'));
         });
     }
     

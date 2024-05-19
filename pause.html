@@ -11,11 +11,16 @@
     <button id="resumeButton">繼續實驗</button>
     <script src="js/pause.js"></script>
     <script>
-        window.history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function (event) {
-            window.history.pushState(null, null, location.href);
-        });
+        (function() {
+            function preventBack() {
+                window.history.pushState(null, null, window.location.href);
+                setTimeout(function() {
+                    window.history.pushState(null, null, window.location.href);
+                }, 0);
+            }
+            window.addEventListener('popstate', preventBack);
+            window.history.pushState(null, null, window.location.href);
+        })();
     </script>
 </body>
 </html>
-

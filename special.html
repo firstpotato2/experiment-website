@@ -13,10 +13,16 @@
     </div>
     <button id="nextImageButton" disabled>前往下一張圖片</button>
     <script>
-        window.history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function (event) {
-            window.history.pushState(null, null, location.href);
-        });
+        (function() {
+            function preventBack() {
+                window.history.pushState(null, null, window.location.href);
+                setTimeout(function() {
+                    window.history.pushState(null, null, window.location.href);
+                }, 0);
+            }
+            window.addEventListener('popstate', preventBack);
+            window.history.pushState(null, null, window.location.href);
+        })();
     </script>
 </body>
 </html>
