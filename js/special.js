@@ -46,8 +46,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextImageButton').addEventListener('click', () => {
         window.location.href = 'test.html';
     });
-    
-    document.getElementById('pauseButton').addEventListener('click', () => {
-        window.location.href = 'pause.html';
-    });
 });
