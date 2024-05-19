@@ -12,23 +12,23 @@ let answeredQuestions = JSON.parse(sessionStorage.getItem('answeredQuestions')) 
 let answers = JSON.parse(sessionStorage.getItem('answers')) || [];
 
 const imagesA = [
-    'https://drive.google.com/uc?export=view&id=1cGrUqRK0P6IgpOJcwP6IRikCbaoDMDIl',
-    'https://drive.google.com/uc?export=view&id=1FumQFEe5i3wG0byoR1EsW-9ZGVpblM0Z'
+    'image1',
+    'image2'
 ];
 
 const imagesB = [
-    'https://drive.google.com/uc?export=view&id=1FglXXLJtgVHWxu9g_A8iX9FChE9Htglr',
-    'https://drive.google.com/uc?export=view&id=1id74twme_AfdwmYEInKVwYWgf6jcwf9V'
+    'image3',
+    'image4'
 ];
 
 const specialImagesA = [
-    'https://drive.google.com/uc?export=view&id=1oUunjw82c71X9b8OLKunzNat3Q_iWoFE',
-    'https://drive.google.com/uc?export=view&id=149_6wZrxp5DodRzG3bIAlG0ACvLETnM8'
+    'special_image1',
+    'special_image2'
 ];
 
 const specialImagesB = [
-    'https://drive.google.com/uc?export=view&id=1OHSPGQevKVVMdLUoRNIVmQGQ3S2u2WvT',
-    'https://drive.google.com/uc?export=view&id=1EBpl_j3jEDq7wQdIn7xEjO_P0KO-zxkw'
+    'special_image3',
+    'special_image4'
 ];
 
 const images = imagesA.concat(imagesB);
@@ -89,12 +89,14 @@ function displayNextImage() {
         const specialIndex = specialImages.indexOf(nextImage);
         window.location.href = `special.html?index=${specialIndex}`;
     } else {
-        document.getElementById('testImage').src = nextImage;
+        document.querySelectorAll('#imageContainer img').forEach(img => img.style.display = 'none'); // 隐藏所有图片
+        document.getElementById(nextImage).style.display = 'block'; // 显示下一张图片
         startTimer();
     }
 }
 
 document.getElementById('nextButton').addEventListener('click', displayNextImage);
 
-document.getElementById('testImage').src = combinedImages[currentImageIndex];
+document.querySelectorAll('#imageContainer img').forEach(img => img.style.display = 'none'); // 隐藏所有图片
+document.getElementById(combinedImages[currentImageIndex]).style.display = 'block'; // 显示初始图片
 startTimer();
