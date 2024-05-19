@@ -11,26 +11,28 @@ let displayedImages = JSON.parse(sessionStorage.getItem('displayedImages')) || [
 let answeredQuestions = JSON.parse(sessionStorage.getItem('answeredQuestions')) || [];
 
 const imagesA = [
-    'https://example.com/images/image1.jpg',
-    'https://example.com/images/image2.jpg',
+    'https://drive.google.com/file/d/1FumQFEe5i3wG0byoR1EsW-9ZGVpblM0Z/view?usp=drive_link',
+    'https://drive.google.com/file/d/1FglXXLJtgVHWxu9g_A8iX9FChE9Htglr/view?usp=drive_link',
     // 确保共有40个URL（A组普通图片）
 ];
 
+
 const imagesB = [
-    'https://example.com/images/image41.jpg',
-    'https://example.com/images/image42.jpg',
+    'https://drive.google.com/file/d/1EBpl_j3jEDq7wQdIn7xEjO_P0KO-zxkw/view?usp=drive_link',
+    'https://drive.google.com/file/d/1cGrUqRK0P6IgpOJcwP6IRikCbaoDMDIl/view?usp=drive_link',
+    
     // 确保共有40个URL（B组普通图片）
 ];
 
 const specialImagesA = [
-    'https://example.com/images/special_image1.jpg',
-    'https://example.com/images/special_image2.jpg',
+    'https://drive.google.com/file/d/1id74twme_AfdwmYEInKVwYWgf6jcwf9V/view?usp=drive_link',
+    'https://drive.google.com/file/d/1OHSPGQevKVVMdLUoRNIVmQGQ3S2u2WvT/view?usp=drive_link',
     // 确保共有10个URL（A组特殊图片）
 ];
 
 const specialImagesB = [
-    'https://example.com/images/special_image11.jpg',
-    'https://example.com/images/special_image12.jpg',
+    'https://drive.google.com/file/d/1oUunjw82c71X9b8OLKunzNat3Q_iWoFE/view?usp=drive_link',
+    'https://drive.google.com/file/d/149_6wZrxp5DodRzG3bIAlG0ACvLETnM8/view?usp=drive_link',
     // 确保共有10个URL（B组特殊图片）
 ];
 

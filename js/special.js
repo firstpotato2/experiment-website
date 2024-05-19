@@ -9,6 +9,16 @@ const questions = [
         options: ['選項A', '選項B', '選項C', '選項D'],
         correct: '選項B'
     },
+    {
+        question: '這是第三個特殊圖片的題目？',
+        options: ['選項A', '選項B', '選項C', '選項D'],
+        correct: '選項B'
+    },
+    {
+        question: '這是第四個特殊圖片的題目？',
+        options: ['選項A', '選項B', '選項C', '選項D'],
+        correct: '選項B'
+    },
     // 继续添加所有特殊图片的题目
 ];
 
