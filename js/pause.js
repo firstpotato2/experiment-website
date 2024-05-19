@@ -1,3 +1,4 @@
 document.getElementById('resumeButton').addEventListener('click', function() {
-    window.location.href = 'test.html';
+    const currentImageIndex = sessionStorage.getItem('currentImageIndex');
+    window.location.href = `test.html?index=${currentImageIndex}`;
 });

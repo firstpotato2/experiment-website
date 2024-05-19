@@ -1,9 +1,15 @@
 document.getElementById('pauseButton').addEventListener('click', function() {
     stopTimer();
+    sessionStorage.setItem('currentImageIndex', currentImageIndex); // 保存当前图片索引到会话存储
+    sessionStorage.setItem('displayedImages', JSON.stringify(displayedImages)); // 保存已显示图片索引到会话存储
+    sessionStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions)); // 保存已回答题目索引到会话存储
     window.location.href = 'pause.html'; // 跳轉到暫停頁面
 });
 
-let currentImageIndex = 0;
+let currentImageIndex = parseInt(new URLSearchParams(window.location.search).get('index')) || parseInt(sessionStorage.getItem('currentImageIndex')) || 0;
+let displayedImages = JSON.parse(sessionStorage.getItem('displayedImages')) || [];
+let answeredQuestions = JSON.parse(sessionStorage.getItem('answeredQuestions')) || [];
+
 const imagesA = [
     'https://example.com/images/image1.jpg',
     'https://example.com/images/image2.jpg',
@@ -36,7 +42,10 @@ shuffleArray(combinedImages);
 
 const times = [];
 const answers = [];
-let startTime;
+
+window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, location.href); // 阻止历史记录中的后退操作
+});
 
 function startTimer() {
     startTime = new Date();
@@ -55,71 +64,41 @@ function shuffleArray(array) {
     }
 }
 
-document.getElementById('nextButton').addEventListener('click', function() {
+function displayNextImage() {
     stopTimer();
-    
-    currentImageIndex++;
+
     if (currentImageIndex >= combinedImages.length) {
         alert('測驗完成');
         generateCSV(); // 生成并下载CSV文件
         window.location.href = 'finish.html'; // 跳轉到完成頁面
         return;
     }
-    
-    if (specialImages.includes(combinedImages[currentImageIndex])) {
-        const specialIndex = specialImages.indexOf(combinedImages[currentImageIndex]);
+
+    let nextImage;
+    do {
+        nextImage = combinedImages[currentImageIndex];
+        currentImageIndex++;
+    } while (displayedImages.includes(nextImage) && currentImageIndex < combinedImages.length);
+
+    if (currentImageIndex >= combinedImages.length) {
+        alert('測驗完成');
+        generateCSV(); // 生成并下载CSV文件
+        window.location.href = 'finish.html'; // 跳轉到完成頁面
+        return;
+    }
+
+    displayedImages.push(nextImage);
+
+    if (specialImages.includes(nextImage)) {
+        const specialIndex = specialImages.indexOf(nextImage);
         window.location.href = `special.html?index=${specialIndex}`;
     } else {
-        document.getElementById('testImage').src = combinedImages[currentImageIndex];
+        document.getElementById('testImage').src = nextImage;
         startTimer();
     }
-});
-
-function generateCSV() {
-    const headers = ['性別', '年齡', '專業', '圖片停留時間', '回答', '正確'];
-    const csvContent = [];
-    csvContent.push(headers.join(','));
-
-    const userInfo = [
-        document.querySelector('input[name="gender"]:checked').value,
-        document.getElementById('age').value,
-        document.getElementById('profession').value,
-    ];
-
-    let correctA = 0, correctB = 0, totalA = 0, totalB = 0;
-
-    for (let i = 0; i < combinedImages.length; i++) {
-        const isSpecial = specialImages.includes(combinedImages[i]);
-        const isGroupA = imagesA.includes(combinedImages[i]) || specialImagesA.includes(combinedImages[i]);
-        const isCorrect = isSpecial ? answers[specialImages.indexOf(combinedImages[i])]?.correct : '';
-
-        if (isGroupA) {
-            totalA++;
-            if (isCorrect) correctA++;
-        } else {
-            totalB++;
-            if (isCorrect) correctB++;
-        }
-
-        const row = [
-            ...userInfo,
-            times[i] || '', // 图片停留时间
-            isSpecial ? answers[specialImages.indexOf(combinedImages[i])]?.answer || '' : '', // 题目回答
-            isCorrect ? '是' : '否' // 是否正确
-        ];
-        csvContent.push(row.join(','));
-    }
-
-    const correctRateA = totalA > 0 ? (correctA / totalA * 100).toFixed(2) : 0;
-    const correctRateB = totalB > 0 ? (correctB / totalB * 100).toFixed(2) : 0;
-
-    csvContent.push(`A组正确率：${correctRateA}%`);
-    csvContent.push(`B组正确率：${correctRateB}%`);
-
-    const csvBlob = new Blob([csvContent.join('\n')], { type: 'text/csv' });
-    const csvUrl = URL.createObjectURL(csvBlob);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = csvUrl;
-    downloadLink.download = 'test_results.csv';
-    downloadLink.click();
 }
+
+document.getElementById('nextButton').addEventListener('click', displayNextImage);
+
+document.getElementById('testImage').src = combinedImages[currentImageIndex];
+startTimer();

@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     answer: option,
                     correct: option === questionData.correct
                 };
-                window.location.href = 'test.html';
+                document.getElementById('nextImageButton').disabled = false; // 启用下一张图片按钮
+                answeredQuestions.push(specialIndex);
+                sessionStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions)); // 保存已回答题目索引到会话存储
             });
             questionContainer.appendChild(optionElement);
         });
