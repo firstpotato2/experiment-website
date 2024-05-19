@@ -1,4 +1,3 @@
- 
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -10,5 +9,11 @@
 <body>
     <h1>感謝您參加本次實驗！</h1>
     <p>我們非常感謝您的參與和貢獻。您的努力對於我們的研究非常重要。</p>
+    <script>
+        window.history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function (event) {
+            window.history.pushState(null, null, location.href);
+        });
+    </script>
 </body>
 </html>

@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('nextImageButton').disabled = false; // 启用下一张图片按钮
                 answeredQuestions.push(specialIndex);
                 sessionStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions)); // 保存已回答题目索引到会话存储
+                sessionStorage.setItem('answers', JSON.stringify(answers)); // 保存答案到会话存储
             });
             questionContainer.appendChild(optionElement);
         });

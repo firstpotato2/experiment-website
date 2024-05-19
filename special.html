@@ -12,6 +12,12 @@
         <!-- 题目将由 JavaScript 动态插入 -->
     </div>
     <button id="nextImageButton" disabled>前往下一張圖片</button>
+    <script>
+        window.history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function (event) {
+            window.history.pushState(null, null, location.href);
+        });
+    </script>
 </body>
 </html>
 

@@ -10,6 +10,12 @@
     <h1>您已暫停實驗</h1>
     <button id="resumeButton">繼續實驗</button>
     <script src="js/pause.js"></script>
+    <script>
+        window.history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function (event) {
+            window.history.pushState(null, null, location.href);
+        });
+    </script>
 </body>
 </html>
 
