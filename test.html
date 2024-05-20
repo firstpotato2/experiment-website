@@ -1,122 +1,105 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>測驗頁面</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Image Viewer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: black;
+        }
+        #image-viewer {
+            position: relative;
+            width: 80%;
+            height: 80%;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div id="test-page">
-        <h1>測驗進行中</h1>
-        <div id="imageContainer">
-            <img id="image1" src="images/image1.jpg" style="display: none;">
-            <img id="image2" src="images/image2.jpg" style="display: none;">
-            <img id="image3" src="images/image3.jpg" style="display: none;">
-            <img id="image4" src="images/image4.jpg" style="display: none;">
-            <img id="special_image1" src="images/special_image1.jpg" style="display: none;">
-            <img id="special_image2" src="images/special_image2.jpg" style="display: none;">
-            <img id="special_image3" src="images/special_image3.jpg" style="display: none;">
-            <img id="special_image4" src="images/special_image4.jpg" style="display: none;">
+    <div id="image-viewer">
+        <img id="image" src="" alt="Image Viewer">
+        <div id="controls">
+            <button id="pause">Pause</button>
+            <button id="next">Next</button>
         </div>
-        <button id="pauseButton">暫停</button>
-        <button id="nextButton">下一張圖片</button>
     </div>
-    <script src="js/test.js"></script>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function preventBack() {
-                window.history.pushState(null, null, window.location.href);
-                setTimeout(function() {
-                    window.history.pushState(null, null, window.location.href);
-                }, 0);
+        const imagesGroupA = {
+            regular: Array.from({length: 40}, (_, i) => `images/A/regular/image${i+1}.jpg`),
+            special: Array.from({length: 10}, (_, i) => `images/A/special/image${i+1}.jpg`)
+        };
+
+        const imagesGroupB = {
+            regular: Array.from({length: 40}, (_, i) => `images/B/regular/image${i+1}.jpg`),
+            special: Array.from({length: 10}, (_, i) => `images/B/special/image${i+1}.jpg`)
+        };
+
+        let allImages = [...imagesGroupA.regular, ...imagesGroupA.special, ...imagesGroupB.regular, ...imagesGroupB.special];
+        let shownImages = [];
+        let currentImageIndex = 0;
+        let isPaused = false;
+        let timer;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
-            window.addEventListener('popstate', preventBack);
-            window.history.pushState(null, null, window.location.href);
+        }
 
-            const imagesA = ['image1', 'image2'];
-            const imagesB = ['image3', 'image4'];
-            const specialImagesA = ['special_image1', 'special_image2'];
-            const specialImagesB = ['special_image3', 'special_image4'];
-
-            const images = imagesA.concat(imagesB);
-            const specialImages = specialImagesA.concat(specialImagesB);
-            const combinedImages = images.concat(specialImages);
-
-            shuffleArray(combinedImages);
-
-            let currentImageIndex = parseInt(new URLSearchParams(window.location.search).get('index')) || parseInt(sessionStorage.getItem('currentImageIndex')) || 0;
-            let displayedImages = JSON.parse(sessionStorage.getItem('displayedImages')) || [];
-            let answeredQuestions = JSON.parse(sessionStorage.getItem('answeredQuestions')) || [];
-            const times = [];
-
-            function startTimer() {
-                startTime = new Date();
-            }
-
-            function stopTimer() {
-                const endTime = new Date();
-                const elapsed = endTime - startTime;
-                times.push(elapsed);
+        function displayNextImage() {
+            if (allImages.length === 0) {
+                alert("No more images to display");
+                return;
             }
 
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-            }
+            if (isPaused) return;
 
-            function displayNextImage() {
-                stopTimer();
+            currentImageIndex = Math.floor(Math.random() * allImages.length);
+            const currentImage = allImages[currentImageIndex];
+            document.getElementById('image').src = currentImage;
 
-                if (currentImageIndex >= combinedImages.length) {
-                    alert('測驗完成');
-                    generateCSV(); // 生成并下载CSV文件
-                    window.location.href = 'finish.html'; // 跳轉到完成頁面
-                    return;
-                }
+            shownImages.push(...allImages.splice(currentImageIndex, 1));
 
-                let nextImage;
-                do {
-                    nextImage = combinedImages[currentImageIndex];
-                    currentImageIndex++;
-                } while (displayedImages.includes(nextImage) && currentImageIndex < combinedImages.length);
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(displayNextImage, 5000); // Change 5000 to desired time in ms
+        }
 
-                if (currentImageIndex >= combinedImages.length) {
-                    alert('測驗完成');
-                    generateCSV(); // 生成并下载CSV文件
-                    window.location.href = 'finish.html'; // 跳轉到完成頁面
-                    return;
-                }
-
-                displayedImages.push(nextImage);
-
-                if (specialImages.includes(nextImage)) {
-                    const specialIndex = specialImages.indexOf(nextImage);
-                    window.location.href = `special.html?index=${specialIndex}`;
-                } else {
-                    document.querySelectorAll('#imageContainer img').forEach(img => img.style.display = 'none'); // 隐藏所有图片
-                    document.getElementById(nextImage).style.display = 'block'; // 显示下一张图片
-                    startTimer();
-                }
-            }
-
-            document.getElementById('nextButton').addEventListener('click', displayNextImage);
-
-            document.getElementById('pauseButton').addEventListener('click', function() {
-                stopTimer();
-                sessionStorage.setItem('currentImageIndex', currentImageIndex); // 保存当前图片索引到会话存储
-                sessionStorage.setItem('displayedImages', JSON.stringify(displayedImages)); // 保存已显示图片索引到会话存储
-                sessionStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions)); // 保存已回答题目索引到会话存储
-                window.location.href = 'pause.html'; // 跳轉到暫停頁面
-            });
-
-            document.querySelectorAll('#imageContainer img').forEach(img => img.style.display = 'none'); // 隐藏所有图片
-            document.getElementById(combinedImages[currentImageIndex]).style.display = 'block'; // 显示初始图片
-            startTimer();
+        document.getElementById('next').addEventListener('click', displayNextImage);
+        document.getElementById('pause').addEventListener('click', () => {
+            isPaused = !isPaused;
+            document.getElementById('pause').innerText = isPaused ? 'Resume' : 'Pause';
+            if (!isPaused) displayNextImage();
         });
+
+        shuffle(allImages);
+        displayNextImage();
     </script>
 </body>
 </html>
-
